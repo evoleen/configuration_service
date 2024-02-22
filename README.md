@@ -27,7 +27,7 @@ also be used with Flutter.
 
 Assume a configuration file `config.json` with the following contents:
 
-```
+```json
 {
     "enable_graphql_playground": true,
     "enable_introspection": true,
@@ -39,7 +39,7 @@ To load such a configuration file in your application, create a class
 `MyConfigurationService` that extends `ConfigurationService` and defines
 typed properties for every configuration value you want to support:
 
-```
+```dart
 class MyConfigurationService extends ConfigurationService {
   // ConfigurationValue<bool> defines a boolean value. You can use bool,
   // int, String, List<> as well as your own complex types (more below).
@@ -72,7 +72,7 @@ class MyConfigurationService extends ConfigurationService {
 
 Load the configuration file with `loadFromJson()`:
 
-```
+```dart
 void main() async {
   final configurationService = MyConfigurationService();
   await configurationService.loadFromJson(filePath: 'config.json');
