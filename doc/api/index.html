@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 8.0.3">
+  <meta name="description" content="configuration_service API docs, for the Dart programming language.">
+  <title>configuration_service - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">configuration_service package</li>
+  </ol>
+  <div class="self-name">configuration_service</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <!-- 
+This README describes the package. If you publish this package to pub.dev,
+this README's contents appear on the landing page for your package.
+
+For information about how to write a good package README, see the guide for
+[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+
+For general information about developing packages, see the Dart guide for
+[creating packages](https://dart.dev/guides/libraries/create-library-packages)
+and the Flutter guide for
+[developing packages and plugins](https://flutter.dev/developing-packages). 
+-->
+<p>Enables applications to make effective use of JSON configuration files.
+Especially useful for backend services or CLI tools written in Dart but can
+also be used with Flutter.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Type-safe processing of JSON configuration files</li>
+<li>No need for code generation</li>
+<li>Handles optional and required values</li>
+<li>Can use defaults if values are missing</li>
+<li>Supports environment variables (great to inject secrets)</li>
+</ul>
+<h2 id="getting-started">Getting started</h2>
+<p>Assume a configuration file <code>config.json</code> with the following contents:</p>
+<pre class="language-dart"><code>{
+    "enable_graphql_playground": true,
+    "enable_introspection": true,
+    "enable_schema_download": true
+}
+</code></pre>
+<p>To load such a configuration file in your application, create a class
+<code>MyConfigurationService</code> that extends <code>ConfigurationService</code> and defines
+typed properties for every configuration value you want to support:</p>
+<pre class="language-dart"><code>class MyConfigurationService extends ConfigurationService {
+  // ConfigurationValue&lt;bool&gt; defines a boolean value. You can use bool,
+  // int, String, List&lt;&gt; as well as your own complex types (more below).
+  final enableGraphQLPlayground = ConfigurationValue&lt;bool&gt;(
+    // name of the value in the configuration file
+    name: "enable_graphql_playground",
+    // optionally specify a default that will be used the value doesn't exist in the configuration file
+    defaultValue: const Optional(false),
+  );
+
+  final enableIntrospection = ConfigurationValue&lt;bool&gt;(
+    name: "enable_introspection",
+    // Values can be marked as required. This will throw an exception if the value is missing in the configuration file.
+    isRequired: true,
+  );
+
+  final enableSchemaDownload = ConfigurationValue&lt;bool&gt;(
+    name: "enable_schema_download",
+    defaultValue: const Optional(false),
+  );
+
+  MyConfigurationService() {
+    // register all configuration values so that they are picked up by the loader
+    register(enableGraphQLPlayground);
+    register(enableIntrospection);
+    register(enableSchemaDownload);
+  }
+}
+</code></pre>
+<p>Load the configuration file with <code>loadFromJson()</code>:</p>
+<pre class="language-dart"><code>void main() async {
+  final configurationService = MyConfigurationService();
+  await configurationService.loadFromJson(filePath: 'config.json');
+
+  print(configurationService.enableIntrospection.value);
+}
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>TODO: Include short and useful examples for package users. Add longer examples
+to <code>/example</code> folder.</p>
+<pre class="language-dart"><code class="language-dart">const like = 'sample';
+</code></pre>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="configuration_service">
+  <span class="name"><a href="configuration_service/configuration_service-library.html">configuration_service</a></span> 
+
+</dt>
+<dd>Enables applications to make effective use of JSON configuration files.
+Especially useful for backend services or CLI tools written in Dart but can
+also be used with Flutter.
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">configuration_service package</li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">configuration_service</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="configuration_service/configuration_service-library.html">configuration_service</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    configuration_service
+      1.0.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

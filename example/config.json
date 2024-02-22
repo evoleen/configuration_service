@@ -1,0 +1,19 @@
+{
+    "enable_graphql_playground": true,
+    "enable_introspection": true,
+    "enable_schema_download": true,
+    "auth": {
+        "verify_token": true,
+        "entity_id_fallbacks": [
+            {
+                "client_role": "Practitioner",
+                "fallback_claim": "emails"
+            },
+            {
+                "client_role": "Patient",
+                "fallback_claim": "emails"
+            }
+        ]
+    }
+  }
+  
