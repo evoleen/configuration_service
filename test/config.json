@@ -1,0 +1,9 @@
+{
+    "enable_graphql_playground": true,
+    "enable_introspection": true,
+    "enable_schema_download": true,
+    "auth": {
+        "verify_token": true
+    }
+  }
+  
