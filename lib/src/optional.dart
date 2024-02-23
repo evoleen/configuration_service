@@ -13,7 +13,7 @@ class Optional<T> {
   /// Returns whether [other] equals [this]
   @override
   bool operator ==(Object other) {
-    return other is Optional && isSet == other.isSet && _value == other.isSet;
+    return other is Optional && isSet == other.isSet && _value == other._value;
   }
 
   @override
