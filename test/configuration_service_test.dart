@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:configuration_service/configuration_service.dart';
 import 'package:test/test.dart';
 
@@ -61,5 +63,30 @@ void main() {
 
       expect(exceptionTriggered, true);
     });
+
+    // The following test can be run by executing `AUTH_NEEDED_FROM_ENVIRONMENT=test dart test`
+    /*
+    test('ConfigurationService will allow data from environment', () async {
+      final envValue = ConfigurationValue<String>(
+          name: "auth.needed_from_environment", isRequired: true);
+
+      final configurationService = MyConfigurationService();
+      configurationService.register(envValue);
+
+      var exceptionTriggered = false;
+
+      try {
+        await configurationService.loadFromJson(
+          filePath: 'test/config.json',
+          allowEnvironmentOverrides: true,
+        );
+      } catch (_) {
+        exceptionTriggered = true;
+      }
+
+      expect(exceptionTriggered, false);
+      expect(envValue.value, "test");
+    });
+    */
   });
 }

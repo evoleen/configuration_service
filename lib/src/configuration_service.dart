@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:configuration_service/src/configuration_value.dart';
+import 'package:recase/recase.dart';
 
 /// Derive from this class to create a configuration service. Add
 /// any values as properties of this class using [ConfigurationValue].
@@ -72,19 +73,35 @@ class ConfigurationService {
   }
 
   /// Loads all configuration values from the file located at [filePath].
-  /// Will validate if all required values exist by default. Can be turned
-  /// off by setting [validate] to false.
+  /// [validate] controls if a check will be perfomed whether all required
+  /// values have been found in the configuration file. Throws an exception
+  /// if validation fails.
+  /// [allowEnvironmentOverrides] enables the use of environment variables
+  /// in addition to the configuration file. Content from environment variables
+  /// takes precedence. Useful when having to inject secrets into the
+  /// configuration (such as API keys or certificates). Should only be used
+  /// if control of the environment can be guaranteed.
+  ///
   /// Throws an exception when unable to load / decode the configuration file
   /// or if validation shows that a required value was missing and no default
   /// exists.
-  Future<void> loadFromJson(
-      {required String filePath, bool validate = true}) async {
+  Future<void> loadFromJson({
+    required String filePath,
+    bool validate = true,
+    bool allowEnvironmentOverrides = false,
+  }) async {
     final input = await File(filePath).readAsString();
     final decodedData = jsonDecode(input);
 
     // decode data for all registered configuration values
     for (final value in _values) {
-      final configurationData = _get(key: value.name, dataStore: decodedData);
+      var configurationData = _get(key: value.name, dataStore: decodedData);
+
+      if (allowEnvironmentOverrides) {
+        if (Platform.environment.containsKey(value.name.constantCase)) {
+          configurationData = Platform.environment[value.name.constantCase];
+        }
+      }
 
       // if we receive a null value, the requested value did not exist
       if (configurationData == null) {
