@@ -83,9 +83,115 @@ void main() async {
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+### Access a value from the configuration file
+
+Assume the following configuration file exists:
+
+```json
+{ "test": true }
+```
+
+The following code will read it:
 
 ```dart
-const like = 'sample';
+final configurationValue = ConfigurationValue<bool>(name: 'test');
+
+final configurationService = ConfigurationService();
+configurationService.register(configurationValue);
+await configurationService.loadFromJson(filePath: 'config.json');
+
+print(configurationValue.value); // "true"
 ```
+
+### Check if a value exists
+
+```dart
+final configurationValue = ConfigurationValue<bool>(name: 'test');
+
+final configurationService = ConfigurationService();
+configurationService.register(configurationValue);
+await configurationService.loadFromJson(filePath: 'config.json');
+
+print(configurationValue.hasValue()); // "true" if value exists in config.json
+```
+
+### Use defaults
+
+```dart
+final configurationValue = ConfigurationValue<bool>(name: 'test', defaultValue = Optional(true));
+
+final configurationService = ConfigurationService();
+configurationService.register(configurationValue);
+await configurationService.loadFromJson(filePath: 'config.json');
+
+print(configurationValue.hasValue()); // "true" even if it doesn't exist in config.json
+print(configurationValue.hasValue(ignoreDefaults: true)); // only "true" if it exists in config.json
+```
+
+### Mark values as required
+
+```dart
+final configurationValue = ConfigurationValue<bool>(name: 'test', isRequired: true);
+
+final configurationService = ConfigurationService();
+configurationService.register(configurationValue);
+
+// will throw an exception if "test" can't be found in the file
+await configurationService.loadFromJson(filePath: 'config.json');
+
+print(configurationValue.value);
+```
+
+### Allow overrides from environment variables
+
+Using `allowEnvironmentOverrides` gives precedence to values found in the environment.
+Names of environment variables are determined by re-casing the configuration value's name
+to `CONSTANT_CASE`.
+
+Examples:
+- `verify_token` becomes `VERIFY_TOKEN`
+- `auth.verify_token` becomes `AUTH_VERIFY_TOKEN`
+
+```dart
+final configurationValue = ConfigurationValue<bool>(name: 'test', isRequired: true);
+
+final configurationService = ConfigurationService();
+configurationService.register(configurationValue);
+
+await configurationService.loadFromJson(filePath: 'config.json', allowEnvironmentOverrides: true);
+
+print(configurationValue.value); // value that was found in env variable TEST, otherwise value from config file
+```
+
+### Using configuration file sections
+
+It is often desirable to partition a configuration file in section for better maintainability.
+A hierarchy of configuration value can be specified by using the dot notation.
+
+Assume the following configuration file:
+
+```json
+{
+  "auth": {
+    "verify_token": true
+  }
+}
+```
+
+The value can be accessed by specifying `auth.verify_token` as its name.
+
+### Using complex types
+
+`configuration_service` understands `int`, `String` and `bool` natively as well as
+corresponding `List` types. To load custom complex types, specify a deserializer
+when registering the type:
+
+```dart
+configurationService.register(authEntityIdFallback, deserializers: {
+      EntityIdFallbackConfig: EntityIdFallbackConfig.fromJson,
+    });
+```
+
+This allows loading arbitrarily structured data from the configuration file. Make sure
+that the `fromJson` method uses correct json keys to access the values from the
+configuration data.
