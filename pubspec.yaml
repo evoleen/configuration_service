@@ -3,7 +3,7 @@ description: Enables applications to read JSON configuration files
 version: 1.0.0
 # repository: https://github.com/my_org/my_repo
 environment:
-  sdk: ^3.3.0
+  sdk: ^3.0.0
 
 # Add regular dependencies here.
 dependencies:
