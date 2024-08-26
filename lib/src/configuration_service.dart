@@ -59,17 +59,29 @@ class ConfigurationService {
 
   /// Helper to cast a dynamic value to type [T] if it is atomic
   /// or call T.fromJson() on it to reconstruct the type.
-  dynamic _decode(dynamic input, Type type) {
-    if (input is int ||
-        input is String ||
-        input is bool ||
-        input is List<int> ||
-        input is List<String> ||
-        input is List<bool>) {
-      return input;
-    } else {
+  dynamic _decode<T>(dynamic input, Type type) {
+    // if we have a registered deserializer for the type, use it
+    if (_deserializers.keys.contains(type)) {
       return _deserializers[type]!(input);
     }
+
+    // for atomic values, return the value
+    if (input is int || input is String || input is bool) {
+      return input;
+    }
+
+    // for lists, return the list itself
+    if (input is List) {
+      if (type == List<int>) {
+        return List<int>.from(input.map((e) => e as int));
+      } else if (type == List<String>) {
+        return List<String>.from(input.map((e) => e as String));
+      } else if (type == List<bool>) {
+        return List<bool>.from(input.map((e) => e as bool));
+      }
+    }
+
+    throw Exception('Unable to decode entry $input');
   }
 
   /// Loads all configuration values from the file located at [filePath].
