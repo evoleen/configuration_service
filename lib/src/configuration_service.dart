@@ -93,6 +93,13 @@ class ConfigurationService {
   /// takes precedence. Useful when having to inject secrets into the
   /// configuration (such as API keys or certificates). Should only be used
   /// if control of the environment can be guaranteed.
+  /// [configurationEnvironmentVariable] can optionally point to a variable
+  /// from which to load the entire configuration JSON object. Enables use
+  /// cases where configuration is not stored in a file but will be passed
+  /// through environment. If this setting is not null and the referenced
+  /// environment variable has content, it will be used instead of [filePath].
+  /// Indidivual overrides through [allowEnvironmentOverrides] still work in
+  /// addition.
   ///
   /// Throws an exception when unable to load / decode the configuration file
   /// or if validation shows that a required value was missing and no default
@@ -101,8 +108,17 @@ class ConfigurationService {
     required String filePath,
     bool validate = true,
     bool allowEnvironmentOverrides = false,
+    String? configurationEnvironmentVariable,
   }) async {
-    final input = await File(filePath).readAsString();
+    String input;
+
+    if (configurationEnvironmentVariable != null &&
+        Platform.environment[configurationEnvironmentVariable] != null) {
+      input = Platform.environment[configurationEnvironmentVariable] ?? '';
+    } else {
+      input = await File(filePath).readAsString();
+    }
+
     final decodedData = jsonDecode(input);
 
     // decode data for all registered configuration values

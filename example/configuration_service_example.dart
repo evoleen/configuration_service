@@ -38,7 +38,11 @@ class MyConfigurationService extends ConfigurationService {
 void main() async {
   final configurationService = MyConfigurationService();
 
-  await configurationService.loadFromJson(filePath: 'config.json');
+  await configurationService.loadFromJson(
+    filePath: 'config.json',
+    allowEnvironmentOverrides: true,
+    configurationEnvironmentVariable: 'SAMPLE_CONFIGURATION',
+  );
 
   print(
       'auth.verify_token was present in the configuration file: ${configurationService.authVerifyToken.hasValue(ignoreDefault: true)}');
