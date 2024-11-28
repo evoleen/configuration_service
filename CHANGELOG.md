@@ -1,3 +1,7 @@
+## 1.0.4
+
+- Prevent crash if data from environment variable isn't in JSON format
+
 ## 1.0.3
 
 - Improve deserialization of stringified values, especially when passed through environment

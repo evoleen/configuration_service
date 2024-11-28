@@ -150,7 +150,12 @@ class ConfigurationService {
         final valueFromEnvironment =
             Platform.environment[value.name.constantCase];
         if (valueFromEnvironment != null) {
-          configurationData = jsonDecode(valueFromEnvironment);
+          configurationData = valueFromEnvironment;
+
+          // if the value can be JSON decoded, try decoding it
+          try {
+            configurationData = jsonDecode(valueFromEnvironment);
+          } catch (_) {}
         }
       }
 
