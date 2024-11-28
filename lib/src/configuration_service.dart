@@ -86,6 +86,8 @@ class ConfigurationService {
         return input ? "true" : "false";
       } else if (type == int) {
         return input ? 1 : 0;
+      } else {
+        return input;
       }
     }
 
