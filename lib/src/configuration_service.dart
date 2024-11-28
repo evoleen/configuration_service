@@ -147,8 +147,10 @@ class ConfigurationService {
       var configurationData = _get(key: value.name, dataStore: decodedData);
 
       if (allowEnvironmentOverrides) {
-        if (Platform.environment.containsKey(value.name.constantCase)) {
-          configurationData = Platform.environment[value.name.constantCase];
+        final valueFromEnvironment =
+            Platform.environment[value.name.constantCase];
+        if (valueFromEnvironment != null) {
+          configurationData = jsonDecode(valueFromEnvironment);
         }
       }
 
