@@ -65,9 +65,28 @@ class ConfigurationService {
       return _deserializers[type]!(input);
     }
 
-    // for atomic values, return the value
-    if (input is int || input is String || input is bool) {
-      return input;
+    if (input is String) {
+      if (type == int) {
+        return int.parse(input);
+      } else if (type == bool) {
+        return input == "1" || input == "true";
+      } else {
+        return input;
+      }
+    } else if (input is int) {
+      if (type == String) {
+        return input.toString();
+      } else if (type == bool) {
+        return input == 1;
+      } else {
+        return input;
+      }
+    } else if (input is bool) {
+      if (type == String) {
+        return input ? "true" : "false";
+      } else if (type == int) {
+        return input ? 1 : 0;
+      }
     }
 
     // for lists, return the list itself
